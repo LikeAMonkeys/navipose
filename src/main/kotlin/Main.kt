@@ -16,7 +16,7 @@ import dev.likeAMonkeys.navipose.navigation.Navigator
 
 @Composable
 @Preview
-fun App() {
+internal fun App() {
     DesktopMaterialTheme {
         Navigator(Screens.Main) {
             addScreen(Screens.Main) { MainScreen(this) }
@@ -25,27 +25,27 @@ fun App() {
     }
 }
 
-fun main() = application {
+internal fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
         App()
     }
 }
 
 @Composable
-fun MainScreen(navigator: INavigator) {
+internal fun MainScreen(navigator: INavigator) {
     Button(onClick = { navigator.navigate(Screens.SubScreen) }) {
         Text("Hello, go to subScreen")
     }
 }
 
 @Composable
-fun SubScreen(navigator: INavigator) {
+internal fun SubScreen(navigator: INavigator) {
     Button(onClick = { navigator.goBack() }) {
         Text("Go back")
     }
 }
 
-sealed class Screens: IScreen {
+internal sealed class Screens: IScreen {
     object Main : Screens()
     object SubScreen : Screens()
 }
