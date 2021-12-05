@@ -23,16 +23,6 @@ internal class NavigationController(startScreen: IScreen) : INavigationControlle
         currentScreen.value = screen
     }
 
-    @Composable
-    override fun startNavigation() {
-        val provider = screenProviders[currentScreen.value]
-        if(provider != null) {
-            provider.invoke()
-        } else {
-            //todo: Draw stub
-        }
-    }
-
     override fun goBack() {
         if (backStack.size > 1) {
             val screen = backStack.pollLast()
@@ -40,6 +30,16 @@ internal class NavigationController(startScreen: IScreen) : INavigationControlle
             backStack.peek()?.let {
                 currentScreen.value = it
             }
+        }
+    }
+
+    @Composable
+    override fun startNavigation() {
+        val provider = screenProviders[currentScreen.value]
+        if(provider != null) {
+            provider.invoke()
+        } else {
+            //todo: Draw stub
         }
     }
 }
