@@ -45,7 +45,7 @@ fun SubScreen(navigator: INavigator) {
     }
 }
 
-object Screens {
-    object Main : IScreen
-    object SubScreen : IScreen
+sealed class Screens: IScreen {
+    object Main : Screens()
+    object SubScreen : Screens()
 }
