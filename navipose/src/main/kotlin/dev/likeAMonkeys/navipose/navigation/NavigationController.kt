@@ -63,10 +63,12 @@ internal class NavigationController(
     }
 
     private fun createBackstackScreen(screen: IScreen): BackstackScreen {
-        val tagPrefix = "@{screen::class.simpleName}:"
+        val className = screen::class.simpleName
+        val tagPrefix = "$className:"
+
         val screenNumber = backStack.count { it.tag.startsWith(tagPrefix) }.inc()
 
-        return BackstackScreen(screen = screen, tag = "$tagPrefix$screenNumber ")
+        return BackstackScreen(screen = screen, tag = "$tagPrefix$screenNumber")
     }
 }
 
