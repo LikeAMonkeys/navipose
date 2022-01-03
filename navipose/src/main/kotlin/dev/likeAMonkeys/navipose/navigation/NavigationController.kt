@@ -2,16 +2,26 @@ package dev.likeAMonkeys.navipose.navigation
 
 import androidx.compose.runtime.*
 import dev.likeAMonkeys.navipose.components.NotFoundScreen
+import dev.likeAMonkeys.navipose.models.BackstackScreen
+import dev.likeAMonkeys.navipose.models.IScreen
 import java.util.*
 
-internal class NavigationController(startScreen: IScreen) : INavigationController {
-    private val backStack: Deque<IScreen> = LinkedList()
+internal class NavigationController(
+    startScreen: IScreen,
+    private val isStubsEnabled: Boolean
+) : INavigationController {
+    private val backStack: Deque<BackstackScreen> = LinkedList()
     private val screenProviders = mutableMapOf<IScreen, @Composable () -> Unit>()
-    private val currentScreen = mutableStateOf(startScreen)
-    override var isStubsEnabled = false
+    private val currentScreen: MutableState<BackstackScreen> by lazy {
+        val screen = createBackstackScreen(startScreen)
+        mutableStateOf(screen)
+    }
+
+    override val currentScreenTag: String
+        get() = currentScreen.value.tag
 
     init {
-        backStack.add(startScreen)
+        backStack.add(currentScreen.value)
     }
 
     override fun addScreen(screen: IScreen, screenProvider: @Composable () -> Unit) {
@@ -20,8 +30,9 @@ internal class NavigationController(startScreen: IScreen) : INavigationControlle
 
     override fun navigate(screen: IScreen) {
         //todo: add args && backstack policy
-        backStack.add(screen)
-        currentScreen.value = screen
+        val backstackScreen = createBackstackScreen(screen)
+        backStack.add(backstackScreen)
+        currentScreen.value = backstackScreen
     }
 
     override fun goBack() {
@@ -37,7 +48,7 @@ internal class NavigationController(startScreen: IScreen) : INavigationControlle
 
     @Composable
     override fun startNavigation() {
-        val provider = screenProviders[currentScreen.value]
+        val provider = screenProviders[currentScreen.value.screen]
 
         when {
             //If any provider found for current screen - show them
@@ -50,23 +61,31 @@ internal class NavigationController(startScreen: IScreen) : INavigationControlle
             )
         }
     }
+
+    private fun createBackstackScreen(screen: IScreen): BackstackScreen {
+        val tagPrefix = "@{screen::class.simpleName}:"
+        val screenNumber = backStack.count { it.tag.startsWith(tagPrefix) }.inc()
+
+        return BackstackScreen(screen = screen, tag = "$tagPrefix$screenNumber ")
+    }
 }
 
 /**
- * todo: uncommented
+ * Internal navigation controller, for manage screens, backstack, etc
+ * @property currentScreenTag current backstack screen tag for current controller
  */
 internal interface INavigationController : INavigator {
-    var isStubsEnabled: Boolean
+    val currentScreenTag: String
 
     /**
-     * todo: uncommented
+     * Composable function, for run navigation, watching current screen and show them
      */
     @Composable
     fun startNavigation()
 
     companion object {
-        internal fun newInstance(startScreen: IScreen): INavigationController {
-            return NavigationController(startScreen)
+        internal fun newInstance(startScreen: IScreen, isStubsEnabled: Boolean): INavigationController {
+            return NavigationController(startScreen, isStubsEnabled)
         }
     }
 }

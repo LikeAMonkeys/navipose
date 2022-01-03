@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import dev.likeAMonkeys.navipose.navigation.INavigator
-import dev.likeAMonkeys.navipose.navigation.IScreen
+import dev.likeAMonkeys.navipose.models.IScreen
 import dev.likeAMonkeys.navipose.components.Navigator
 
 @Composable

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import dev.likeAMonkeys.navipose.navigation.INavigationController
 import dev.likeAMonkeys.navipose.navigation.INavigator
-import dev.likeAMonkeys.navipose.navigation.IScreen
+import dev.likeAMonkeys.navipose.models.IScreen
 
 /**
  * TODO: uncommented
@@ -17,8 +17,8 @@ fun Navigator(
 ) {
     //Create navigator
     val navigator = remember {
-        INavigationController.newInstance(startScreen).apply {
-            isStubsEnabled = enableStubs
+        INavigationController.newInstance(startScreen = startScreen, isStubsEnabled = enableStubs).apply {
+
         }
     }
 

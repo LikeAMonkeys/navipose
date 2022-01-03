@@ -1,4 +1,6 @@
-package dev.likeAMonkeys.navipose.navigation
+package dev.likeAMonkeys.navipose.models
+
+import dev.likeAMonkeys.navipose.navigation.BackstackBehavior
 
 /**
  * Basic screen abstraction, to use objects during navigation
